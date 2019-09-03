@@ -1,31 +1,40 @@
 {
-  "name": "tetris",
-  "version": "0.1.0",
-  "private": true,
+  "name": "landscape",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.js",
+  "author": "",
+  "license": "ISC",
   "dependencies": {
-    "react": "^16.9.0",
-    "react-dom": "^16.9.0",
-    "react-scripts": "3.1.1"
+    "@juan-utils/functions": "latest",
+    "@juan-utils/simple-logger": "latest",
+    "@juan-utils/structures": "latest",
+    "p5": "^0.9.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.5.5",
+    "@babel/core": "^7.5.5",
+    "@babel/plugin-proposal-class-properties": "^7.5.5",
+    "@babel/plugin-proposal-object-rest-spread": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "babel-loader": "^8.0.6",
+    "html-webpack-plugin": "^3.2.0",
+    "webpack": "^4.39.3",
+    "webpack-cli": "^3.3.7",
+    "webpack-dev-server": "^3.8.0"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "start": "yarn docs",
+    "docs": "webpack-dev-server --mode development",
+    "docs:prod": "webpack --mode production"
   },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
+  "babel": {
+    "presets": [
+      "@babel/env"
     ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
+    "plugins": [
+      "@babel/plugin-proposal-object-rest-spread",
+      "@babel/plugin-proposal-class-properties"
     ]
   }
 }
