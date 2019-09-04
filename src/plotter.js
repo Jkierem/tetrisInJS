@@ -82,9 +82,14 @@ export const createPlotter = (core,engine) => {
             const { grid, piece, queue } = engine.get();
             piece.getBlocks().forEach( pos => {
                 const abs = pos.map(mult(length));
-                drawBlock(p,abs,length,red)
+                drawBlock(p,abs,length,piece.color)
             })
-
+            grid.map( tile => {
+                if(!tile.empty){
+                    const abs = tile.pos.map(mult(length));
+                    drawBlock(p,abs,length,tile.color);
+                }
+            })
         })
     }
 

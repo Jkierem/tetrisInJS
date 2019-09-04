@@ -47,6 +47,10 @@ let main = (p) => {
             case "F":
                 engine.pocket();
                 break;
+            case "r":
+            case "R":
+                engine.cycle();
+                break;
         }
     }
 }

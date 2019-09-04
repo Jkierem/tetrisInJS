@@ -1,14 +1,14 @@
 import { Vector } from "@juan-utils/structures";
 
 export const Colors = {
-    green: "#1c911c",
-    darkgreen: "#236e0c",
-    brown: "#965b03",
-    yellow: "#ffe51f",
-    blue: "#8dd7fc",
-    red: "#6e110c",
-    roof: "#6e4c0c",
-    black: "#000000"
+    yellow: "#ffe74a",
+    blue: "#4adbff",
+    red: "#ff0a0a",
+    green: "#0e8709",
+    orange: "#ff7300",
+    pink: "#ff00ff",
+    purple: "#a407d9",
+    black: "#000000",
 }
 
 export const Constants = {

@@ -1,4 +1,4 @@
-import { Directions, Constants, Tetrominos } from './data'
+import { Directions, Constants, Tetrominos, Colors } from './data'
 import { Vector } from '@juan-utils/structures';
 import { createIdentityLogger as Logger, Levels } from '@juan-utils/simple-logger'
 import { prop, pipe, isNil } from '@juan-utils/functions';
@@ -11,12 +11,13 @@ const {
     DIAG_UP_LEFT, DIAG_UP_RIGHT
 } = Directions
 
-const createPiece = (position,rotations,currentRot=0) => {
+const createPiece = (position,rotations,color,currentRot=0) => {
     let rot = currentRot;
     let pos = position;
     return {
-        get pos(){ return pos },
+        color,
         rotations,
+        get pos(){ return pos },
         rotate(){ rot = (rot + 1) % rotations.length; return this },
         move(dir){ pos = pos.add(dir); return this; },
         getBlocks(){ return rotations[rot](pos) },
@@ -38,7 +39,7 @@ const createSquare = (pos) => {
     const rotations = [
         createRotation(RIGHT,DOWN,DIAG_DOWN_RIGHT)
     ]
-    return createPiece(pos,rotations);
+    return createPiece(pos,rotations,Colors.yellow);
 }
 
 //I
@@ -47,17 +48,8 @@ const createHero = (pos) => {
         createRotation(UP,DOWN,DOWN.scale(2)),
         createRotation(LEFT,RIGHT,RIGHT.scale(2))
     ]
-    return createPiece(pos,rotations);
+    return createPiece(pos,rotations,Colors.blue);
 } 
-
-//Z
-const createMofo = (pos) => {
-    const rotations = [
-        createRotation(UP,RIGHT,DIAG_UP_LEFT),
-        createRotation(UP,DIAG_UP_RIGHT,DIAG_UP_RIGHT.add(UP))
-    ]
-    return createPiece(pos,rotations);
-}
 
 //S
 const createAhole = (pos) => {
@@ -65,7 +57,16 @@ const createAhole = (pos) => {
         createRotation(UP,LEFT,DIAG_UP_RIGHT),
         createRotation(UP,DIAG_UP_LEFT,DIAG_UP_LEFT.add(UP))
     ]
-    return createPiece(pos,rotations);
+    return createPiece(pos,rotations,Colors.red);
+}
+
+//Z
+const createMofo = (pos) => {
+    const rotations = [
+        createRotation(UP,RIGHT,DIAG_UP_LEFT),
+        createRotation(UP,DIAG_UP_RIGHT,DIAG_UP_RIGHT.add(UP))
+    ]
+    return createPiece(pos,rotations,Colors.green);
 }
 
 //T
@@ -76,7 +77,7 @@ const createTee = (pos) => {
         createRotation(DOWN,LEFT,RIGHT),
         createRotation(UP,DOWN,LEFT),
     ]
-    return createPiece(pos,rotations);
+    return createPiece(pos,rotations,Colors.purple);
 }
 
 //L
@@ -87,7 +88,7 @@ const createSidekick = (pos) => {
         createRotation(DOWN,DOWN.scale(2),LEFT),
         createRotation(UP,LEFT,LEFT.scale(2)),
     ]
-    return createPiece(pos,rotations);
+    return createPiece(pos,rotations,Colors.orange);
 } 
 
 //J
@@ -98,11 +99,11 @@ const createOtherSidekick = (pos) => {
         createRotation(RIGHT,DOWN,DOWN.scale(2)),
         createRotation(DOWN,LEFT,LEFT.scale(2)),
     ]
-    return createPiece(pos,rotations);
+    return createPiece(pos,rotations,Colors.pink);
 }
 
 const createPieceFromType = (type) => {
-    const pos = Vector(5,-3);
+    const pos = Vector(5,5);
     const { O , I , Z , S , T , L , J } = Tetrominos;
     switch(type){
         case O:
@@ -122,9 +123,7 @@ const createPieceFromType = (type) => {
     }
 }
 
-const Tile = (empty=true,color="") => ({
-    empty,color
-})
+const Tile = (empty=true,color="") => ({ empty , color })
 
 const createGrid = (width , height) => {
     const data = [];
@@ -136,22 +135,34 @@ const createGrid = (width , height) => {
         data.push(arr)
     }
     return {
+        data,
         collides({ x , y }){
             const isEmpty = pipe( prop(x) , prop(y) , prop("empty") )(data)
-            return false
-            return isEmpty === true && !isNil(isEmpty);
+            return isEmpty === false && !isNil(isEmpty);
         },
-        occupyCell({ x , y , color }){
+        occupyCell({ x , y },color){
             data[x][y] = Tile(false,color);
         },
         emptyCell({ x , y }){
             data[x][y] = Tile();
+        },
+        map(f){
+            for( let i = 0 ; i < width ; i++ ){
+                for( let j = 0 ; j < height ; j++ ){
+                    f({
+                        pos: Vector(i,j),
+                        ...data[i][j]
+                    })
+                }
+            }
         }
     }
 }
 
 export const createEngine = (p) => {
-    let piece = createAhole(Vector(5,5));
+    let currentType = 0
+    const types = Object.keys(Tetrominos);
+    let piece = createPieceFromType(types[currentType]);
     const queue = [ ]
     let pocket = null;
     const grid = createGrid(10,20);
@@ -163,7 +174,11 @@ export const createEngine = (p) => {
         tick(){
             const aux = piece.clone().move(DOWN);
             if( grid.collides(aux.pos) || !isInside(aux.pos) ){
-                //TODO: Finish this
+                piece.getBlocks().map( block => {
+                    grid.occupyCell(block,piece.color);
+                })
+                debugger;
+                piece = queue.pop();
             }else{
                 piece.move(DOWN)
             }
@@ -201,10 +216,14 @@ export const createEngine = (p) => {
         },
         get(){
             return {
+                grid,
                 piece,
                 queue: queue.slice(0,5),
-                grid: {},
             }
-        }, //get static grid + active piece
+        },
+        cycle(){
+            currentType = (currentType + 1)%types.length;
+            piece = createPieceFromType(types[currentType]);
+        }
     }
 }
