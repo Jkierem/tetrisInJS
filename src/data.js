@@ -19,11 +19,21 @@ export const Constants = {
 
 export const Directions = {
     DOWN: Vector(0,1),
-    UP: Vector(0,1),
+    UP: Vector(0,-1),
     RIGHT: Vector(1,0),
     LEFT: Vector(-1,0),
     DIAG_UP_LEFT: Vector(-1,-1),
     DIAG_UP_RIGHT: Vector(1,-1),
     DIAG_DOWN_LEFT: Vector(-1,1),
     DIAG_DOWN_RIGHT: Vector(1,1),
+}
+
+export const Tetrominos = {
+    O:"O",
+    I:"I",
+    S:"S",
+    Z:"Z",
+    L:"L",
+    J:"J",
+    T:"T"
 }

@@ -1,5 +1,6 @@
 import { Constants, Colors } from "./data";
 import { Vector } from '@juan-utils/structures'
+import { mult } from "@juan-utils/functions";
 
 const drawOuterRectangle = (p,Constants) => {
     const { cols , rows , length } = Constants;
@@ -54,10 +55,12 @@ const drawHorizontalLines = (core,Constants) => {
 }
 
 const drawBlock = (p,pos,length,color) => {
-    const [x,y] = pos.toArray();
-    p.fill(color)
-    p.stroke(color)
-    p.rect(x,y,length,length);
+    const { x , y } = pos;
+    if( x >= 0 && y >= 0 ){
+        p.fill(color)
+        p.stroke(color)
+        p.rect(x,y,length,length);
+    }
 }
 
 export const createPlotter = (core,engine) => {
@@ -76,7 +79,12 @@ export const createPlotter = (core,engine) => {
         const { red } = Colors
         core.safe( p => {
             p.translate(20,20)
-            const data = engine.get();
+            const { grid, piece, queue } = engine.get();
+            piece.getBlocks().forEach( pos => {
+                const abs = pos.map(mult(length));
+                drawBlock(p,abs,length,red)
+            })
+
         })
     }
 

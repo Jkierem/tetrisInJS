@@ -23,26 +23,3 @@ export const createCore = (p) => {
         }
     }
 }
-
-export const createLagrangeInterpolator = (points) => {
-    const createLagrangePolynomial = (point,index,arr) => {
-        const xj = point.x;
-        return (x) => {
-            return arr.reduce(
-                (acc,p,i) => {
-                    if( i !== index ){
-                        const xi = p.x;
-                        return acc * ((x-xi)/(xj-xi))
-                    }
-                    return acc;
-                }
-                ,1)
-        }
-    }
-
-    const polynomials = points.map(createLagrangePolynomial);
-
-    return (x) => polynomials.reduce( (acc,pol,index) => {
-        return acc + (points[index].y * pol(x))
-    },0);
-}
