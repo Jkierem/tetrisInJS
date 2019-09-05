@@ -1,7 +1,7 @@
 import { Directions, Constants, Tetrominos, Colors } from './data'
 import { Vector } from '@juan-utils/structures';
 import { createIdentityLogger as Logger, Levels } from '@juan-utils/simple-logger'
-import { prop, pipe, isNil } from '@juan-utils/functions';
+import { prop, pipe, isNil, isEmpty } from '@juan-utils/functions';
 
 const logger = Logger(Levels.Off);
 
@@ -22,7 +22,7 @@ const createPiece = (position,rotations,color,currentRot=0) => {
         move(dir){ pos = pos.add(dir); return this; },
         getBlocks(){ return rotations[rot](pos) },
         getPosition(){ return pos.toArray() },
-        clone(){ return createPiece(pos,rotations,rot) },
+        clone(){ return createPiece(pos,rotations,color,rot) },
         teleport(next){ pos = next; return this }
     }
 }
@@ -103,7 +103,7 @@ const createOtherSidekick = (pos) => {
 }
 
 const createPieceFromType = (type) => {
-    const pos = Vector(5,5);
+    const pos = Vector(5,-3);
     const { O , I , Z , S , T , L , J } = Tetrominos;
     switch(type){
         case O:
@@ -121,6 +121,12 @@ const createPieceFromType = (type) => {
         case J:
             return createOtherSidekick(pos)
     }
+}
+
+const createRandomPiece = () => {
+    const types = Object.keys(Tetrominos);
+    const typeN = Math.floor(Math.random() * types.length);
+    return createPieceFromType(types[typeN]);
 }
 
 const Tile = (empty=true,color="") => ({ empty , color })
@@ -163,7 +169,7 @@ export const createEngine = (p) => {
     let currentType = 0
     const types = Object.keys(Tetrominos);
     let piece = createPieceFromType(types[currentType]);
-    const queue = [ ]
+    const queue = [ createAhole(Vector(5,-3)) , createAhole(Vector(5,-3)) ]
     let pocket = null;
     const grid = createGrid(10,20);
     const isInside = ({ x , y }) => {
@@ -173,12 +179,17 @@ export const createEngine = (p) => {
     return {
         tick(){
             const aux = piece.clone().move(DOWN);
-            if( grid.collides(aux.pos) || !isInside(aux.pos) ){
+            const blocks = aux.getBlocks()
+            const collides = blocks.some( b => grid.collides(b) )
+            const isOutside = !blocks.every(isInside)
+            if(  collides || isOutside ){
                 piece.getBlocks().map( block => {
                     grid.occupyCell(block,piece.color);
                 })
-                debugger;
                 piece = queue.pop();
+                if( isEmpty(queue) ){
+                    queue.push(createRandomPiece())
+                }
             }else{
                 piece.move(DOWN)
             }
@@ -193,26 +204,40 @@ export const createEngine = (p) => {
             } else {
                 pocket = piece.clone();
                 piece = queue.pop().clone().teleport(piece.pos) 
+                if( isEmpty(queue) ){
+                    queue.push(createRandomPiece())
+                }
             }
         },  //swap with pocketed piece
         moveLeft(){ 
             const aux = piece.clone().move(LEFT);
-            if( aux.getBlocks().every(isInside) ){
+            if( this.isValidPosition(aux) ){
                 piece.move(LEFT); 
             }
         },
         moveRight(){
             const aux = piece.clone().move(RIGHT);
-            if( aux.getBlocks().every(isInside) ){
+            if( this.isValidPosition(aux) ){
                 piece.move(RIGHT); 
             }
         },
-        drop(){ piece.move(DOWN); },
+        drop(){ 
+            const aux = piece.clone().move(DOWN);
+            if( this.isValidPosition(aux) ){
+                piece.move(DOWN);
+            }
+        },
         rotate(){ 
             const aux = piece.clone().rotate()
             if( aux.getBlocks().every(isInside) ){
                 piece.rotate() 
             }
+        },
+        isValidPosition(piece){
+            const blocks = piece.getBlocks()
+            const collides = blocks.some( b => grid.collides(b) )
+            const isIn = blocks.every(isInside)
+            return !collides && isIn
         },
         get(){
             return {
