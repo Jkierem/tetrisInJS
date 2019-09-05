@@ -8,8 +8,11 @@ Missing for v1.0:
 - [x] Rotate piece
 - [x] Pocket piece
 - [x] Place piece
+- [ ] Display Queue 
+- [ ] Display Pocket
 - [ ] Clear line
 - [ ] Score
 - [ ] Levels
-- [ ] Display Queue 
 - [ ] Fair random pieces
+- [ ] Losing condition
+- [ ] Restart game
