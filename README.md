@@ -8,9 +8,9 @@ Missing for v1.0:
 - [x] Rotate piece
 - [x] Pocket piece
 - [x] Place piece
+- [x] Clear lines
 - [ ] Display Queue 
 - [ ] Display Pocket
-- [ ] Clear line
 - [ ] Score
 - [ ] Levels
 - [ ] Fair random pieces

@@ -58,7 +58,7 @@ const drawBlock = (p,pos,length,color) => {
     const { x , y } = pos;
     if( x >= 0 && y >= 0 ){
         p.fill(color)
-        p.stroke(color)
+        p.noStroke()
         p.rect(x,y,length,length);
     }
 }

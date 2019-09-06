@@ -132,10 +132,10 @@ const createRandomPiece = () => {
 const Tile = (empty=true,color="") => ({ empty , color })
 
 const createGrid = (width , height) => {
-    const data = [];
-    for( let i = 0 ; i < width ; i++ ){
+    let data = [];
+    for( let i = 0 ; i < height ; i++ ){
         const arr = []
-        for( let j = 0 ; j < height ; j++ ){
+        for( let j = 0 ; j < width ; j++ ){
             arr.push(Tile())
         }
         data.push(arr)
@@ -143,21 +143,31 @@ const createGrid = (width , height) => {
     return {
         data,
         collides({ x , y }){
-            const isEmpty = pipe( prop(x) , prop(y) , prop("empty") )(data)
+            const isEmpty = pipe( prop(y) , prop(x) , prop("empty") )(data)
             return isEmpty === false && !isNil(isEmpty);
         },
         occupyCell({ x , y },color){
-            data[x][y] = Tile(false,color);
+            data[y][x] = Tile(false,color);
         },
         emptyCell({ x , y }){
-            data[x][y] = Tile();
+            data[y][x] = Tile();
+        },
+        clean(){
+            data = data.filter( row => row.some(t => t.empty))
+            while( data.length !== height ){
+                const arr = []
+                for( let j = 0 ; j < width ; j++ ){
+                    arr.push(Tile())
+                }
+                data = [ arr , ...data ]
+            }
         },
         map(f){
             for( let i = 0 ; i < width ; i++ ){
                 for( let j = 0 ; j < height ; j++ ){
                     f({
                         pos: Vector(i,j),
-                        ...data[i][j]
+                        ...data[j][i]
                     })
                 }
             }
@@ -168,8 +178,8 @@ const createGrid = (width , height) => {
 export const createEngine = (p) => {
     let currentType = 0
     const types = Object.keys(Tetrominos);
-    let piece = createPieceFromType(types[currentType]);
-    const queue = [ createAhole(Vector(5,-3)) , createAhole(Vector(5,-3)) ]
+    let piece = createRandomPiece();
+    const queue = [ createRandomPiece() ]
     let pocket = null;
     const grid = createGrid(10,20);
     const isInside = ({ x , y }) => {
@@ -186,6 +196,7 @@ export const createEngine = (p) => {
                 piece.getBlocks().map( block => {
                     grid.occupyCell(block,piece.color);
                 })
+                grid.clean();
                 piece = queue.pop();
                 if( isEmpty(queue) ){
                     queue.push(createRandomPiece())
@@ -229,7 +240,7 @@ export const createEngine = (p) => {
         },
         rotate(){ 
             const aux = piece.clone().rotate()
-            if( aux.getBlocks().every(isInside) ){
+            if( this.isValidPosition(aux) ){
                 piece.rotate() 
             }
         },
