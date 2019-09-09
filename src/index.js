@@ -19,7 +19,7 @@ let main = (p) => {
         p.resetMatrix();
         plotter.draw();
         frame++;
-        if( frame >= 60 ){
+        if( frame >= 15 ){
             engine.tick();
             frame = 0
         }

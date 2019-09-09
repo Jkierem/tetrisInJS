@@ -9,10 +9,10 @@ Missing for v1.0:
 - [x] Pocket piece
 - [x] Place piece
 - [x] Clear lines
+- [x] Fair random pieces using grab bag 
 - [ ] Display Queue 
 - [ ] Display Pocket
 - [ ] Score
 - [ ] Levels
-- [ ] Fair random pieces
 - [ ] Losing condition
 - [ ] Restart game

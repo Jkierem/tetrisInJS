@@ -1,20 +1,22 @@
-import { Directions, Constants, Tetrominos, Colors } from './data'
 import { Vector } from '@juan-utils/structures';
+import { prop, pipe, isNil } from '@juan-utils/functions';
 import { createIdentityLogger as Logger, Levels } from '@juan-utils/simple-logger'
-import { prop, pipe, isNil, isEmpty } from '@juan-utils/functions';
+import { createGrabBag } from './grabbag'
+import { Directions, Constants, Tetrominos, Colors } from './data'
 
 const logger = Logger(Levels.Off);
 
 const {
     UP, DOWN, LEFT, RIGHT, 
-    DIAG_DOWN_LEFT, DIAG_DOWN_RIGHT,
+    DIAG_DOWN_RIGHT,
     DIAG_UP_LEFT, DIAG_UP_RIGHT
 } = Directions
 
-const createPiece = (position,rotations,color,currentRot=0) => {
+const createPiece = (type,position,rotations,color,currentRot=0) => {
     let rot = currentRot;
     let pos = position;
     return {
+        type,
         color,
         rotations,
         get pos(){ return pos },
@@ -22,7 +24,7 @@ const createPiece = (position,rotations,color,currentRot=0) => {
         move(dir){ pos = pos.add(dir); return this; },
         getBlocks(){ return rotations[rot](pos) },
         getPosition(){ return pos.toArray() },
-        clone(){ return createPiece(pos,rotations,color,rot) },
+        clone(){ return createPiece(type,pos,rotations,color,rot) },
         teleport(next){ pos = next; return this }
     }
 }
@@ -39,7 +41,7 @@ const createSquare = (pos) => {
     const rotations = [
         createRotation(RIGHT,DOWN,DIAG_DOWN_RIGHT)
     ]
-    return createPiece(pos,rotations,Colors.yellow);
+    return createPiece("O",pos,rotations,Colors.yellow);
 }
 
 //I
@@ -48,7 +50,7 @@ const createHero = (pos) => {
         createRotation(UP,DOWN,DOWN.scale(2)),
         createRotation(LEFT,RIGHT,RIGHT.scale(2))
     ]
-    return createPiece(pos,rotations,Colors.blue);
+    return createPiece("I",pos,rotations,Colors.blue);
 } 
 
 //S
@@ -57,7 +59,7 @@ const createAhole = (pos) => {
         createRotation(UP,LEFT,DIAG_UP_RIGHT),
         createRotation(UP,DIAG_UP_LEFT,DIAG_UP_LEFT.add(UP))
     ]
-    return createPiece(pos,rotations,Colors.red);
+    return createPiece("S",pos,rotations,Colors.red);
 }
 
 //Z
@@ -66,7 +68,7 @@ const createMofo = (pos) => {
         createRotation(UP,RIGHT,DIAG_UP_LEFT),
         createRotation(UP,DIAG_UP_RIGHT,DIAG_UP_RIGHT.add(UP))
     ]
-    return createPiece(pos,rotations,Colors.green);
+    return createPiece("Z",pos,rotations,Colors.green);
 }
 
 //T
@@ -77,7 +79,7 @@ const createTee = (pos) => {
         createRotation(DOWN,LEFT,RIGHT),
         createRotation(UP,DOWN,LEFT),
     ]
-    return createPiece(pos,rotations,Colors.purple);
+    return createPiece("T",pos,rotations,Colors.purple);
 }
 
 //L
@@ -88,7 +90,7 @@ const createSidekick = (pos) => {
         createRotation(DOWN,DOWN.scale(2),LEFT),
         createRotation(UP,LEFT,LEFT.scale(2)),
     ]
-    return createPiece(pos,rotations,Colors.orange);
+    return createPiece("L",pos,rotations,Colors.orange);
 } 
 
 //J
@@ -99,7 +101,7 @@ const createOtherSidekick = (pos) => {
         createRotation(RIGHT,DOWN,DOWN.scale(2)),
         createRotation(DOWN,LEFT,LEFT.scale(2)),
     ]
-    return createPiece(pos,rotations,Colors.pink);
+    return createPiece("J",pos,rotations,Colors.pink);
 }
 
 const createPieceFromType = (type) => {
@@ -175,11 +177,16 @@ const createGrid = (width , height) => {
     }
 }
 
+const types = Object.keys(Tetrominos);
+
 export const createEngine = (p) => {
+    const bag = createGrabBag({
+        options: types,
+        quantity: 5
+    })
     let currentType = 0
-    const types = Object.keys(Tetrominos);
-    let piece = createRandomPiece();
-    const queue = [ createRandomPiece() ]
+    let piece = createPieceFromType(bag.get());
+    const queue = bag.get(5).map(createPieceFromType);
     let pocket = null;
     const grid = createGrid(10,20);
     const isInside = ({ x , y }) => {
@@ -197,10 +204,8 @@ export const createEngine = (p) => {
                     grid.occupyCell(block,piece.color);
                 })
                 grid.clean();
-                piece = queue.pop();
-                if( isEmpty(queue) ){
-                    queue.push(createRandomPiece())
-                }
+                piece = queue.shift();
+                queue.push(createPieceFromType(bag.get()));
             }else{
                 piece.move(DOWN)
             }
@@ -214,12 +219,10 @@ export const createEngine = (p) => {
                 }
             } else {
                 pocket = piece.clone();
-                piece = queue.pop().clone().teleport(piece.pos) 
-                if( isEmpty(queue) ){
-                    queue.push(createRandomPiece())
-                }
+                piece = queue.shift().clone().teleport(piece.pos) 
+                queue.push(createPieceFromType(bag.get()));
             }
-        },  //swap with pocketed piece
+        },
         moveLeft(){ 
             const aux = piece.clone().move(LEFT);
             if( this.isValidPosition(aux) ){
