@@ -64,10 +64,9 @@ const drawBlock = (p,pos,length,color) => {
 }
 
 export const createPlotter = (core,engine) => {
-
+    
     const drawGrid = () => {
         core.safe( p => {
-            p.translate(20,20)
             drawOuterRectangle(p,Constants)
             drawVerticalLines(core,Constants)
             drawHorizontalLines(core,Constants)
@@ -76,10 +75,8 @@ export const createPlotter = (core,engine) => {
 
     const drawPieces = () => {
         const { length } = Constants
-        const { red } = Colors
         core.safe( p => {
-            p.translate(20,20)
-            const { grid, piece, queue } = engine.get();
+            const { grid, piece } = engine.get();
             piece.getBlocks().forEach( pos => {
                 const abs = pos.map(mult(length));
                 drawBlock(p,abs,length,piece.color)
@@ -93,10 +90,26 @@ export const createPlotter = (core,engine) => {
         })
     }
 
+    const drawScore = () => {
+        const { score } = engine.get();
+        const { cols , length } = Constants;
+        core.safe((p) => {
+            p.translate(cols * length + 20, 30);
+            p.fill(0)
+            p.textSize(32)
+            p.text("Score:",0,0);
+            p.translate(0,32);
+            p.text(score,0,0);
+        })
+    }
+
     return {
         draw(){
+            core.open( p => p.translate(20,20) )
             drawGrid();
             drawPieces();
+            drawScore();
+            core.close();
         }
     }
 }

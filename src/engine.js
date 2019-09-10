@@ -17,6 +17,7 @@ export const createEngine = () => {
     const grid = createGrid(cols,rows);
     let piece = createPieceFromType(bag.get());
     let pocket = null;
+    let score = 0;
     
     const isInside = ({ x , y }) => {
         return x >= 0 && y >= -4 && x < cols && y < rows
@@ -32,7 +33,7 @@ export const createEngine = () => {
                 piece.getBlocks().map( block => {
                     grid.occupyCell(block,piece.color);
                 })
-                grid.clean();
+                score += grid.clean();
                 piece = queue.shift();
                 queue.push(createPieceFromType(bag.get()));
             }else{
@@ -87,6 +88,7 @@ export const createEngine = () => {
                 grid,
                 piece,
                 pocket,
+                score,
                 queue: queue.slice(0,5),
             }
         },
