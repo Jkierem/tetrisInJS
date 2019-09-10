@@ -5,13 +5,12 @@ import { createPlotter } from './plotter';
 
 let main = (p) => {
     const core = createCore(p)
-    const engine = createEngine(p)
+    const engine = createEngine()
     const plotter = createPlotter(core,engine);
     let frame = 0;
 
     p.setup = () => {
         p.createCanvas(650,700)
-        //p.noLoop();
     };
 
     p.draw = () => {
@@ -19,7 +18,7 @@ let main = (p) => {
         p.resetMatrix();
         plotter.draw();
         frame++;
-        if( frame >= 15 ){
+        if( frame >= engine.getFrameCount() ){
             engine.tick();
             frame = 0
         }
@@ -46,10 +45,6 @@ let main = (p) => {
             case "f":
             case "F":
                 engine.pocket();
-                break;
-            case "r":
-            case "R":
-                engine.cycle();
                 break;
         }
     }

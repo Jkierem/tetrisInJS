@@ -37,3 +37,5 @@ export const Tetrominos = {
     J:"J",
     T:"T"
 }
+
+export const Types = Object.keys(Tetrominos)
