@@ -11,8 +11,8 @@ Missing for v1.0:
 - [x] Clear lines
 - [x] Fair random pieces using grab bag 
 - [x] Display Score
-- [ ] Display Queue 
-- [ ] Display Pocket
+- [x] Display Queue 
+- [x] Display Pocket
 - [ ] Levels
 - [ ] Losing condition
 - [ ] Restart game

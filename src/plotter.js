@@ -1,4 +1,4 @@
-import { Constants, Colors } from "./data";
+import { Constants, Colors, Tetrominos } from "./data";
 import { Vector } from '@juan-utils/structures'
 import { mult } from "@juan-utils/functions";
 
@@ -103,12 +103,64 @@ export const createPlotter = (core,engine) => {
         })
     }
 
+    const drawQueuePocket = () => {
+        const { queue , pocket } = engine.get();
+        const { cols , length} = Constants
+        core.safe( (p) => {
+            p.translate(cols * length + 20, 80);
+            p.stroke(0)
+            p.rect(0,0,70,400);
+            core.safe( p => {
+                p.translate(-45,10)
+                p.scale(0.3)
+                queue.reverse()
+                queue.forEach( (piece) => {
+                    p.translate(0,250)
+                    if( piece.type === Tetrominos.I ){
+                        p.translate(0,-40)
+                    }
+                    piece.getBlocks().forEach( pos => {
+                        const abs = pos.map(mult(50))
+                        p.fill(piece.color);
+                        p.rect(abs.x,abs.y,50,50)
+                    })
+                    if( piece.type === Tetrominos.I ){
+                        p.translate(0,40)
+                    }
+                })
+            })
+
+            p.translate(0,430)
+            p.rect(0,0,70,80);
+
+            if( pocket ){
+                core.safe( p => {
+                    p.translate(30,35)
+                    p.scale(0.3)
+                    if( pocket.type === Tetrominos.I ){
+                        p.translate(0,-10)
+                    }
+                    pocket.clone().teleport(Vector(0,0)).getBlocks().forEach( pos => {
+                        const abs = pos.map(mult(50))
+                        p.fill(pocket.color);
+                        p.rect(abs.x,abs.y,50,50)
+                    })
+                    if( pocket.type === Tetrominos.I ){
+                        p.translate(0,10)
+                    }
+                })
+            }
+
+        })
+    }
+
     return {
         draw(){
             core.open( p => p.translate(20,20) )
             drawGrid();
             drawPieces();
             drawScore();
+            drawQueuePocket();
             core.close();
         }
     }
