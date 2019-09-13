@@ -25,26 +25,36 @@ let main = (p) => {
     };
 
     p.keyTyped = () => {
+        const { lost } = engine.get();
         switch(p.key) {
             case "a":
             case "A":
+                if(!lost)
                 engine.moveLeft();
                 break;
             case "d":
             case "D":
+                if(!lost)
                 engine.moveRight();
                 break;
             case "w":
             case "W":
+                if(!lost)
                 engine.rotate()
                 break;
             case "s":
             case "S":
+                if(!lost)
                 engine.drop()
                 break;
             case "f":
             case "F":
+                if(!lost)
                 engine.pocket();
+                break;
+            case 'r':
+            case 'R':
+                engine.restart();
                 break;
         }
     }

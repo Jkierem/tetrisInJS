@@ -154,6 +154,17 @@ export const createPlotter = (core,engine) => {
         })
     }
 
+    const drawIfLost = () => {
+        const { lost } = engine.get();
+        if( lost ){
+            core.safe( p => {
+                p.translate(0,630)
+                p.textSize(24);
+                p.text("You Lose. Press R to restart",0,0)
+            })
+        }
+    }
+
     return {
         draw(){
             core.open( p => p.translate(20,20) )
@@ -161,6 +172,7 @@ export const createPlotter = (core,engine) => {
             drawPieces();
             drawScore();
             drawQueuePocket();
+            drawIfLost()
             core.close();
         }
     }

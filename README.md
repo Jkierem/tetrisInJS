@@ -13,6 +13,7 @@ Missing for v1.0:
 - [x] Display Score
 - [x] Display Queue 
 - [x] Display Pocket
+- [x] Restart game
 - [ ] Levels
 - [ ] Losing condition
-- [ ] Restart game
+- [ ] Drop piece

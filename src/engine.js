@@ -12,12 +12,13 @@ const bagConfig = {
 
 export const createEngine = () => {
     const { rows , cols } = Constants
-    const bag = createGrabBag(bagConfig)
-    const queue = bag.get(5).map(createPieceFromType);
-    const grid = createGrid(cols,rows);
+    let bag = createGrabBag(bagConfig)
+    let queue = bag.get(5).map(createPieceFromType);
+    let grid = createGrid(cols,rows);
     let piece = createPieceFromType(bag.get());
     let pocket = null;
     let score = 0;
+    let lost = false;
     
     const isInside = ({ x , y }) => {
         return x >= 0 && y >= -4 && x < cols && y < rows
@@ -25,19 +26,26 @@ export const createEngine = () => {
 
     return {
         tick(){
-            const aux = piece.clone().move(DOWN);
-            const blocks = aux.getBlocks()
-            const collides = blocks.some( b => grid.collides(b) )
-            const isOutside = !blocks.every(isInside)
-            if(  collides || isOutside ){
-                piece.getBlocks().map( block => {
-                    grid.occupyCell(block,piece.color);
-                })
-                score += grid.clean();
-                piece = queue.shift();
-                queue.push(createPieceFromType(bag.get()));
-            }else{
-                piece.move(DOWN)
+            if(!lost){
+                const aux = piece.clone().move(DOWN);
+                const blocks = aux.getBlocks()
+                const collides = blocks.some( b => grid.collides(b) )
+                const isOutside = !blocks.every(isInside)
+                if(  collides || isOutside ){
+                    const pblocks = piece.getBlocks() 
+                    if( pblocks.some( ({y}) => y < 0 ) ){
+                        lost = true;
+                    } else {
+                        pblocks.map( block => {
+                            grid.occupyCell(block,piece.color);
+                        })
+                        score += grid.clean();
+                        piece = queue.shift();
+                        queue.push(createPieceFromType(bag.get()));
+                    }
+                }else{
+                    piece.move(DOWN)
+                }
             }
         }, 
         pocket(){
@@ -89,11 +97,21 @@ export const createEngine = () => {
                 piece,
                 pocket,
                 score,
+                lost,
                 queue: queue.slice(0,5),
             }
         },
         getFrameCount(){
-            return 60
-        }
+            return 10
+        },
+        restart(){
+            bag = createGrabBag(bagConfig)
+            queue = bag.get(5).map(createPieceFromType);
+            grid = createGrid(cols,rows);
+            piece = createPieceFromType(bag.get());
+            pocket = null;
+            score = 0;
+            lost = false;
+        },
     }
 }
