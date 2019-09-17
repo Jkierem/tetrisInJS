@@ -41,6 +41,13 @@ v1.1.1:
 - [x] Remove arrow scrolling
 - [x] Use 2-bag instead of 3-bag
 - [x] Fix pocket rotation
+
+v1.1.2:
+
+- [x] Adjust levels
+
+v1.1.3:
+
 - [ ] Fix pocket swap bug
 - [ ] Fix rotations on edges
 - [ ] Reduce piece time to draw

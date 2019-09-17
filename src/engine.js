@@ -16,10 +16,10 @@ const level = (level,framerate) => ({ level, framerate })
 
 const levelSelector = threshold([
     [ lessThan(1000) , justOf(level(1,60)) ],
-    [ between(1000,4500) , justOf(level(2,30)) ],
-    [ between(4500,8000) , justOf(level(3,15)) ],
-    [ between(8000,11000) , justOf(level(4,10)) ],
-    [ between(11000,16000) , justOf(level(5,5)) ],
+    [ between(1000,3500) , justOf(level(2,30)) ],
+    [ between(3500,8000) , justOf(level(3,15)) ],
+    [ between(8000,12000) , justOf(level(4,10)) ],
+    [ between(12000,16000) , justOf(level(5,5)) ],
     [ moreOrEqualTo(16000) , justOf(level("MAX",2)) ],
 ])
 
