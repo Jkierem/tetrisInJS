@@ -4,6 +4,8 @@ import { createEngine } from './engine';
 import { createPlotter } from './plotter';
 import { KeyCodes } from './data';
 
+window.addEventListener('keydown', e => e.preventDefault())
+
 let main = (p) => {
     const core = createCore(p)
     const engine = createEngine()

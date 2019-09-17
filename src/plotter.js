@@ -161,11 +161,14 @@ export const createPlotter = (core,engine) => {
                     if( pocket.type === Tetrominos.I ){
                         p.translate(0,-10)
                     }
-                    pocket.clone().teleport(Vector(0,0)).getBlocks().forEach( pos => {
-                        const abs = pos.map(mult(50))
-                        p.fill(pocket.color);
-                        p.rect(abs.x,abs.y,50,50)
-                    })
+                    pocket.clone()
+                        .teleport(Vector(0,0))
+                        .getStandardBlocks()
+                        .forEach( pos => {
+                            const abs = pos.map(mult(50))
+                            p.fill(pocket.color);
+                            p.rect(abs.x,abs.y,50,50)
+                        })
                     if( pocket.type === Tetrominos.I ){
                         p.translate(0,10)
                     }

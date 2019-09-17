@@ -18,9 +18,10 @@ const createPiece = (type,position,rotations,color,currentRot=0) => {
         rotate(){ rot = (rot + 1) % rotations.length; return this },
         move(dir){ pos = pos.add(dir); return this; },
         getBlocks(){ return rotations[rot](pos) },
+        getStandardBlocks(){ return rotations[0](pos) },
         getPosition(){ return pos.toArray() },
         clone(){ return createPiece(type,pos,rotations,color,rot) },
-        teleport(next){ pos = next; return this }
+        teleport(next){ pos = next; return this },
     }
 }
 

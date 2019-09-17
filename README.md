@@ -35,6 +35,17 @@ v1.1:
     - [x] Arrow keys and WASD for movement/rotation/drop
     - [x] Shift for Pocket
 
+v1.1.1:
+
+- [x] Reduce time in level 1
+- [x] Remove arrow scrolling
+- [x] Use 2-bag instead of 3-bag
+- [x] Fix pocket rotation
+- [ ] Fix pocket swap bug
+- [ ] Fix rotations on edges
+- [ ] Reduce piece time to draw
+- [ ] Local highscore
+
 v1.2:
 
 - [ ] Shadow of drop

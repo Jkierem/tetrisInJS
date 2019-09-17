@@ -9,14 +9,14 @@ const { DOWN , RIGHT , LEFT } = Directions
 
 const bagConfig = {
     options: Types,
-    quantity: 3
+    quantity: 2
 };
 
 const level = (level,framerate) => ({ level, framerate })
 
 const levelSelector = threshold([
-    [ lessThan(1500) , justOf(level(1,60)) ],
-    [ between(1500,4500) , justOf(level(2,30)) ],
+    [ lessThan(1000) , justOf(level(1,60)) ],
+    [ between(1000,4500) , justOf(level(2,30)) ],
     [ between(4500,8000) , justOf(level(3,15)) ],
     [ between(8000,11000) , justOf(level(4,10)) ],
     [ between(11000,16000) , justOf(level(5,5)) ],
