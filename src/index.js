@@ -2,6 +2,7 @@ import * as p5 from 'p5';
 import { createCore, runConfirm } from './utils';
 import { createEngine } from './engine';
 import { createPlotter } from './plotter';
+import { KeyCodes } from './data';
 
 let main = (p) => {
     const core = createCore(p)
@@ -10,7 +11,7 @@ let main = (p) => {
     let frame = 0;
 
     p.setup = () => {
-        p.createCanvas(650,700)
+        p.createCanvas(700,700)
     };
 
     p.draw = () => {
@@ -24,36 +25,34 @@ let main = (p) => {
         }
     };
 
-    p.keyTyped = () => {
+    p.keyPressed = () => {
         const { lost , running } = engine.get();
-        switch(p.key) {
-            case "a":
-            case "A":
+        switch(p.keyCode) {
+            case KeyCodes.A:
+            case KeyCodes.LEFT_ARROW:
                 if(!lost && running)
                 engine.moveLeft();
                 break;
-            case "d":
-            case "D":
+            case KeyCodes.D:
+            case KeyCodes.RIGHT_ARROW:
                 if(!lost && running)
                 engine.moveRight();
                 break;
-            case "w":
-            case "W":
+            case KeyCodes.W:
+            case KeyCodes.UP_ARROW:
                 if(!lost && running)
                 engine.rotate()
                 break;
-            case "s":
-            case "S":
+            case KeyCodes.S:
+            case KeyCodes.DOWN_ARROW:
                 if(!lost && running)
                 engine.softdrop()
                 break;
-            case "f":
-            case "F":
+            case KeyCodes.SHIFT:
                 if(!lost && running)
                 engine.pocket();
                 break;
-            case 'r':
-            case 'R':
+            case KeyCodes.R:
                 if( !lost ){
                     runConfirm(
                         () => engine.pause(),
@@ -65,12 +64,10 @@ let main = (p) => {
                     engine.restart();
                 }
                 break;
-            case 'p':
-            case 'P':
+            case KeyCodes.P:
                 engine.togglePause();
                 break;
-            case 'h':
-            case 'H':
+            case KeyCodes.SPACE:
                 engine.drop();
                 break;
         }

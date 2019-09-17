@@ -18,9 +18,9 @@ const levelSelector = threshold([
     [ lessThan(1500) , justOf(level(1,60)) ],
     [ between(1500,4500) , justOf(level(2,30)) ],
     [ between(4500,8000) , justOf(level(3,15)) ],
-    [ between(8000,12000) , justOf(level(4,10)) ],
-    [ between(12000,18000) , justOf(level(5,5)) ],
-    [ moreOrEqualTo(18000) , justOf(level("MAX",2)) ],
+    [ between(8000,11000) , justOf(level(4,10)) ],
+    [ between(11000,16000) , justOf(level(5,5)) ],
+    [ moreOrEqualTo(16000) , justOf(level("MAX",2)) ],
 ])
 
 export const createEngine = () => {

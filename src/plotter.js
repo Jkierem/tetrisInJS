@@ -1,4 +1,4 @@
-import { Constants, Colors, Tetrominos } from "./data";
+import { Constants, Colors, Tetrominos, HelpText } from "./data";
 import { Vector } from '@juan-utils/structures'
 
 const mult = a => b => a*b
@@ -113,6 +113,14 @@ export const createPlotter = (core,engine) => {
             })
             p.translate(0,32);
             p.text(level,0,0);
+            p.translate(100,340);
+            const helpSize = 20;
+            const lineSkip = helpSize + 5;
+            p.textSize(helpSize);
+            HelpText.forEach( line => {
+                p.translate(0,lineSkip);
+                p.text(line,0,0)
+            })
         })
     }
 

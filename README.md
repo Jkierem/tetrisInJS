@@ -1,6 +1,15 @@
 # Tetris in JS using P5
 
-Missing for v1.0:
+Controls:
+- Arrow keys/WASD: move/rotate/soft drop piece
+- SHIFT: pocket piece
+- SPACE: hard drop
+- P pause
+- R restart
+
+## Roadmap
+
+v1.0:
 
 - [x] Paint pieces
 - [x] Move pieces
@@ -19,13 +28,17 @@ Missing for v1.0:
 - [x] Pausing the game
 - [x] Drop piece
 
-v1.0:
+v1.1:
 
-Controls:
-- AD move piece
-- W rotate
-- F pocket piece
-- H hard drop
-- S soft drop
-- P pause
-- R restart
+- [x] Control changes
+    - [x] Space for hard drop
+    - [x] Arrow keys and WASD for movement/rotation/drop
+    - [x] Shift for Pocket
+
+v1.2:
+
+- [ ] Shadow of drop
+
+Next:
+
+- [ ] Online play

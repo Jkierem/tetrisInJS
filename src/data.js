@@ -1,4 +1,5 @@
 import { Vector } from "@juan-utils/structures";
+import { codeOf } from "./utils";
 
 export const Colors = {
     yellow: "#ffe74a",
@@ -39,3 +40,29 @@ export const Tetrominos = {
 }
 
 export const Types = Object.keys(Tetrominos)
+
+export const KeyCodes = {
+    SPACE: 32,
+    LEFT_ARROW: 37,
+    UP_ARROW: 38,
+    RIGHT_ARROW: 39,
+    DOWN_ARROW: 40,
+    SHIFT: 16,
+    P: 80,
+    R: 82,
+    A: 65,
+    D: 68,
+    W: 87,
+    S: 83
+}
+
+export const HelpText = [
+    "Controls:",
+    "← →/A,D  : move piece",
+    "↑/W      : rotate piece",
+    "↓/S      : soft drop",
+    "Spacebar : hard drop",
+    "Shift    : pocket piece",
+    "P        : pause game",
+    "R        : restart game",
+]

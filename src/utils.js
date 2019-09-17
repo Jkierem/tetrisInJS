@@ -29,3 +29,5 @@ export const runConfirm = (before,question,affirmative,negative) => {
     const result = confirm(question);
     result ? affirmative() : negative();
 }
+
+export const codeOf = char => char.charCodeAt(0)
