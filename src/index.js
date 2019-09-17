@@ -1,5 +1,5 @@
 import * as p5 from 'p5';
-import { createCore } from './utils';
+import { createCore, runConfirm } from './utils';
 import { createEngine } from './engine';
 import { createPlotter } from './plotter';
 
@@ -25,36 +25,53 @@ let main = (p) => {
     };
 
     p.keyTyped = () => {
-        const { lost } = engine.get();
+        const { lost , running } = engine.get();
         switch(p.key) {
             case "a":
             case "A":
-                if(!lost)
+                if(!lost && running)
                 engine.moveLeft();
                 break;
             case "d":
             case "D":
-                if(!lost)
+                if(!lost && running)
                 engine.moveRight();
                 break;
             case "w":
             case "W":
-                if(!lost)
+                if(!lost && running)
                 engine.rotate()
                 break;
             case "s":
             case "S":
-                if(!lost)
-                engine.drop()
+                if(!lost && running)
+                engine.softdrop()
                 break;
             case "f":
             case "F":
-                if(!lost)
+                if(!lost && running)
                 engine.pocket();
                 break;
             case 'r':
             case 'R':
-                engine.restart();
+                if( !lost ){
+                    runConfirm(
+                        () => engine.pause(),
+                        "Restart?",
+                        () => engine.restart(),
+                        () => {}
+                    )
+                } else {
+                    engine.restart();
+                }
+                break;
+            case 'p':
+            case 'P':
+                engine.togglePause();
+                break;
+            case 'h':
+            case 'H':
+                engine.drop();
                 break;
         }
     }

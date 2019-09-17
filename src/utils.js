@@ -23,3 +23,9 @@ export const createCore = (p) => {
         }
     }
 }
+
+export const runConfirm = (before,question,affirmative,negative) => {
+    before();
+    const result = confirm(question);
+    result ? affirmative() : negative();
+}

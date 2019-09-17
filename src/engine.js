@@ -2,13 +2,26 @@ import { createGrid } from './grid';
 import { createGrabBag } from './grabbag'
 import { createPieceFromType } from './pieces';
 import { Directions, Constants, Types } from './data'
+import { threshold, lessThan, between, moreOrEqualTo } from './threshold';
+import { justOf } from '../../juan-utils/packages/functions/modules';
 
 const { DOWN , RIGHT , LEFT } = Directions
 
 const bagConfig = {
     options: Types,
-    quantity: 10
+    quantity: 3
 };
+
+const level = (level,framerate) => ({ level, framerate })
+
+const levelSelector = threshold([
+    [ lessThan(1500) , justOf(level(1,60)) ],
+    [ between(1500,4500) , justOf(level(2,30)) ],
+    [ between(4500,8000) , justOf(level(3,15)) ],
+    [ between(8000,12000) , justOf(level(4,10)) ],
+    [ between(12000,18000) , justOf(level(5,5)) ],
+    [ moreOrEqualTo(18000) , justOf(level("MAX",2)) ],
+])
 
 export const createEngine = () => {
     const { rows , cols } = Constants
@@ -19,6 +32,8 @@ export const createEngine = () => {
     let pocket = null;
     let score = 0;
     let lost = false;
+    let running = true;
+    let level = 1;
     
     const isInside = ({ x , y }) => {
         return x >= 0 && y >= -4 && x < cols && y < rows
@@ -26,7 +41,7 @@ export const createEngine = () => {
 
     return {
         tick(){
-            if(!lost){
+            if(!lost && running){
                 const aux = piece.clone().move(DOWN);
                 const blocks = aux.getBlocks()
                 const collides = blocks.some( b => grid.collides(b) )
@@ -47,7 +62,39 @@ export const createEngine = () => {
                     piece.move(DOWN)
                 }
             }
-        }, 
+        },
+        drop(){
+            if(!lost && running){
+                let aux = piece.clone().move(DOWN);
+                let blocks = aux.getBlocks()
+                let collides = blocks.some( b => grid.collides(b) )
+                let isOutside = !blocks.every(isInside)
+                while( !collides && !isOutside ){
+                    piece = aux.clone();
+                    aux = piece.clone().move(DOWN);
+                    blocks = aux.getBlocks();
+                    collides = blocks.some(b => grid.collides(b))
+                    isOutside = !blocks.every(isInside)
+                }
+                const pblocks = piece.getBlocks() 
+                if( pblocks.some( ({y}) => y < 0 ) ){
+                    lost = true;
+                } else {
+                    pblocks.map( block => {
+                        grid.occupyCell(block,piece.color);
+                    })
+                    score += grid.clean();
+                    piece = queue.shift();
+                    queue.push(createPieceFromType(bag.get()));
+                }
+            }
+        },
+        togglePause(){
+            running = !running
+        },
+        pause(){
+            running = false;
+        },
         pocket(){
             if( pocket ){
                 if( pocket.getBlocks().every(isInside) ){
@@ -57,7 +104,7 @@ export const createEngine = () => {
                 }
             } else {
                 pocket = piece.clone();
-                piece = queue.shift().clone().teleport(piece.pos) 
+                piece = queue.shift().clone().teleport(piece.pos)
                 queue.push(createPieceFromType(bag.get()));
             }
         },
@@ -73,7 +120,7 @@ export const createEngine = () => {
                 piece.move(RIGHT); 
             }
         },
-        drop(){ 
+        softdrop(){ 
             const aux = piece.clone().move(DOWN);
             if( this.isValidPosition(aux) ){
                 piece.move(DOWN);
@@ -98,11 +145,15 @@ export const createEngine = () => {
                 pocket,
                 score,
                 lost,
+                level,
+                running,
                 queue: queue.slice(0,5),
             }
         },
         getFrameCount(){
-            return 10
+            const { level:lvl , framerate } = levelSelector(score)
+            level = lvl
+            return framerate
         },
         restart(){
             bag = createGrabBag(bagConfig)
@@ -112,6 +163,7 @@ export const createEngine = () => {
             pocket = null;
             score = 0;
             lost = false;
+            running = true;
         },
     }
 }

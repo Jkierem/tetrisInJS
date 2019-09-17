@@ -1,6 +1,7 @@
 import { Constants, Colors, Tetrominos } from "./data";
 import { Vector } from '@juan-utils/structures'
-import { mult } from "@juan-utils/functions";
+
+const mult = a => b => a*b
 
 const drawOuterRectangle = (p,Constants) => {
     const { cols , rows , length } = Constants;
@@ -90,16 +91,28 @@ export const createPlotter = (core,engine) => {
         })
     }
 
-    const drawScore = () => {
-        const { score } = engine.get();
+    const drawHUD = () => {
+        const { score, level, running } = engine.get();
         const { cols , length } = Constants;
         core.safe((p) => {
-            p.translate(cols * length + 20, 30);
             p.fill(0)
             p.textSize(32)
-            p.text("Score:",0,0);
+            if( !running ){
+                core.safe( p => {
+                    p.translate( 90 , 50 )
+                    p.text("PAUSED",0,0)
+                })
+            }
+            p.translate(cols * length + 20, 30);
+            p.text("Level:",0,0);
+            core.safe( p => {
+                p.translate(100,0)
+                p.text("Score:",0,0)
+                p.translate(0,32)
+                p.text(score,0,0)
+            })
             p.translate(0,32);
-            p.text(score,0,0);
+            p.text(level,0,0);
         })
     }
 
@@ -170,7 +183,7 @@ export const createPlotter = (core,engine) => {
             core.open( p => p.translate(20,20) )
             drawGrid();
             drawPieces();
-            drawScore();
+            drawHUD();
             drawQueuePocket();
             drawIfLost()
             core.close();

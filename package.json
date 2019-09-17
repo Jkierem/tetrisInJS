@@ -24,9 +24,8 @@
     "webpack-dev-server": "^3.8.0"
   },
   "scripts": {
-    "start": "yarn docs",
-    "docs": "webpack-dev-server --mode development",
-    "docs:prod": "webpack --mode production"
+    "start": "webpack-dev-server --mode development",
+    "build": "webpack --mode production"
   },
   "babel": {
     "presets": [

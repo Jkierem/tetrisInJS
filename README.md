@@ -14,6 +14,18 @@ Missing for v1.0:
 - [x] Display Queue 
 - [x] Display Pocket
 - [x] Restart game
-- [ ] Levels
-- [ ] Losing condition
-- [ ] Drop piece
+- [x] Levels
+- [x] Losing condition
+- [x] Pausing the game
+- [x] Drop piece
+
+v1.0:
+
+Controls:
+- AD move piece
+- W rotate
+- F pocket piece
+- H hard drop
+- S soft drop
+- P pause
+- R restart
