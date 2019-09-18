@@ -1,5 +1,4 @@
 import { Vector } from "@juan-utils/structures";
-import { codeOf } from "./utils";
 
 export const Colors = {
     yellow: "#ffe74a",

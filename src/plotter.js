@@ -1,5 +1,5 @@
-import { Constants, Colors, Tetrominos, HelpText } from "./data";
 import { Vector } from '@juan-utils/structures'
+import { Constants, Colors, Tetrominos, HelpText } from "./data";
 
 const mult = a => b => a*b
 

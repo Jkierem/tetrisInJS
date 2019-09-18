@@ -675,22 +675,22 @@
     lodash "^4.17.13"
     to-fast-properties "^2.0.0"
 
-"@juan-utils/functions@^0.0.22", "@juan-utils/functions@latest":
-  version "0.0.22"
-  resolved "https://registry.yarnpkg.com/@juan-utils/functions/-/functions-0.0.22.tgz#6a5eb6ce1ae1065b6317107a1d4a12e68eda3111"
-  integrity sha512-pidD72ZrVfKrCP62Yr6uEoQhTtyr205sZo51RnlSXAk1QbAWpcfWk5yNT87abuXMwKqTwnLUoclrmIVjAPoEmQ==
+"@juan-utils/functions@0.0.26", "@juan-utils/functions@^0.0.26":
+  version "0.0.26"
+  resolved "https://registry.yarnpkg.com/@juan-utils/functions/-/functions-0.0.26.tgz#faacfc75f50da300c99190245af118b53e810b99"
+  integrity sha512-wGP9NQCTHCSusReZ9brmw5M6lP3YfzB/5kKX3WdwA+pYqabf8MCskiTSpHB1awNUdCNPnnNB1QA1dMJnBO492w==
 
-"@juan-utils/simple-logger@latest":
-  version "0.0.22"
-  resolved "https://registry.yarnpkg.com/@juan-utils/simple-logger/-/simple-logger-0.0.22.tgz#21d07e94c9c22b1fbd3e7109f39ce6d3d782a83e"
-  integrity sha512-QVXdgCCHSYWaqQ5B6hTrvs0aGMTx/S1CU3Bugs0Zipi0IXsdKIZdsTWeBuOm4qPu6+umxLdPiFupTqmjxXRLwQ==
+"@juan-utils/simple-logger@0.0.26":
+  version "0.0.26"
+  resolved "https://registry.yarnpkg.com/@juan-utils/simple-logger/-/simple-logger-0.0.26.tgz#012da69ac3895bfb1b00e8c0c4b9a8b95ab2f574"
+  integrity sha512-NA/U+jcefIM+ljjra6S4RcV8RvGSxVEdy81/mzcm+ryFG49bXY2y4SRphLXLCg74gaj5gfvqU63ObPfcz4dYrw==
 
-"@juan-utils/structures@latest":
-  version "0.0.22"
-  resolved "https://registry.yarnpkg.com/@juan-utils/structures/-/structures-0.0.22.tgz#72a2d37f719569927d342dd44336788bf8a38767"
-  integrity sha512-eL3Es2bUHaWGr6KIaSQPor8CuDacVOix5B6jlmbl3wjSnOiQq9he3Wxs6jDEL6jyzB607BQVQ2XmYMRszRhO6Q==
+"@juan-utils/structures@0.0.26":
+  version "0.0.26"
+  resolved "https://registry.yarnpkg.com/@juan-utils/structures/-/structures-0.0.26.tgz#d1cccd04c13182f50be0217db89a8c99e2c723d1"
+  integrity sha512-a9+DJ6sfJsMd+S84gLIv1nqzB+zMArOo4+utEjTrw95HIKU54XMRyILnkuKclnks/xGuQdyPrf++gkG92aD/oA==
   dependencies:
-    "@juan-utils/functions" "^0.0.22"
+    "@juan-utils/functions" "^0.0.26"
 
 "@types/events@*":
   version "3.0.0"

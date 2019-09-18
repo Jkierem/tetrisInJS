@@ -1,9 +1,9 @@
+import { justOf } from '@juan-utils/functions';
 import { createGrid } from './grid';
 import { createGrabBag } from './grabbag'
 import { createPieceFromType } from './pieces';
 import { Directions, Constants, Types } from './data'
 import { threshold, lessThan, between, moreOrEqualTo } from './threshold';
-import { justOf } from '../../juan-utils/packages/functions/modules';
 
 const { DOWN , RIGHT , LEFT } = Directions
 
