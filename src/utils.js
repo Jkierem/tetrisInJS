@@ -30,4 +30,13 @@ export const runConfirm = (before,question,affirmative,negative) => {
     result ? affirmative() : negative();
 }
 
-export const codeOf = char => char.charCodeAt(0)
+export const githubLink = () => {
+    const textNode = document.createTextNode("Source")
+    const link = document.createElement("a");
+    const container = document.createElement("div")
+    link.href = "http://github.com/jkierem/tetrisInJs"
+    container.classList = ["link"]
+    link.appendChild(textNode);
+    container.appendChild(link);
+    document.querySelector("body").appendChild(container)
+}

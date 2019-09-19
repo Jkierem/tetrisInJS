@@ -1,5 +1,5 @@
 import * as p5 from 'p5';
-import { createCore, runConfirm } from './utils';
+import { createCore, runConfirm, githubLink } from './utils';
 import { createEngine } from './engine';
 import { createPlotter } from './plotter';
 import { KeyCodes } from './data';
@@ -7,13 +7,14 @@ import { KeyCodes } from './data';
 window.addEventListener('keydown', e => e.preventDefault())
 
 let main = (p) => {
-    const core = createCore(p)
-    const engine = createEngine()
+    const core = createCore(p);
+    const engine = createEngine();
     const plotter = createPlotter(core,engine);
     let frame = 0;
 
     p.setup = () => {
-        p.createCanvas(700,700)
+        p.createCanvas(700,665)
+        githubLink();
     };
 
     p.draw = () => {
@@ -50,6 +51,7 @@ let main = (p) => {
                 if(!lost && running)
                 engine.softdrop()
                 break;
+            //TODO: Replace shift due to minor bug where shift gets blocked
             case KeyCodes.SHIFT:
                 if(!lost && running)
                 engine.pocket();

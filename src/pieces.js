@@ -1,5 +1,5 @@
 import { Vector } from '@juan-utils/structures';
-import { Directions, Tetrominos, Colors } from './data'
+import { Directions, Tetrominos, Colors, Types } from './data'
 
 const {
     UP, DOWN, LEFT, RIGHT, 
@@ -32,16 +32,14 @@ const createRotation = (...dirs) => {
     ]
 }
 
-//O
-const createSquare = (pos) => {
+const createO = (pos) => {
     const rotations = [
         createRotation(RIGHT,DOWN,DIAG_DOWN_RIGHT)
     ]
     return createPiece("O",pos,rotations,Colors.yellow);
 }
 
-//I
-const createHero = (pos) => {
+const createI = (pos) => {
     const rotations = [
         createRotation(UP,DOWN,DOWN.scale(2)),
         createRotation(LEFT,RIGHT,RIGHT.scale(2))
@@ -49,8 +47,7 @@ const createHero = (pos) => {
     return createPiece("I",pos,rotations,Colors.blue);
 } 
 
-//S
-const createAhole = (pos) => {
+const createS = (pos) => {
     const rotations = [
         createRotation(UP,LEFT,DIAG_UP_RIGHT),
         createRotation(UP,DIAG_UP_LEFT,DIAG_UP_LEFT.add(UP))
@@ -58,8 +55,7 @@ const createAhole = (pos) => {
     return createPiece("S",pos,rotations,Colors.red);
 }
 
-//Z
-const createMofo = (pos) => {
+const createZ = (pos) => {
     const rotations = [
         createRotation(UP,RIGHT,DIAG_UP_LEFT),
         createRotation(UP,DIAG_UP_RIGHT,DIAG_UP_RIGHT.add(UP))
@@ -67,8 +63,7 @@ const createMofo = (pos) => {
     return createPiece("Z",pos,rotations,Colors.green);
 }
 
-//T
-const createTee = (pos) => {
+const createT = (pos) => {
     const rotations = [
         createRotation(UP,LEFT,RIGHT),
         createRotation(UP,DOWN,RIGHT),
@@ -78,8 +73,7 @@ const createTee = (pos) => {
     return createPiece("T",pos,rotations,Colors.purple);
 }
 
-//L
-const createSidekick = (pos) => {
+const createL = (pos) => {
     const rotations = [
         createRotation(UP,UP.scale(2),RIGHT),
         createRotation(DOWN,RIGHT,RIGHT.scale(2)),
@@ -89,8 +83,7 @@ const createSidekick = (pos) => {
     return createPiece("L",pos,rotations,Colors.orange);
 } 
 
-//J
-const createOtherSidekick = (pos) => {
+const createJ = (pos) => {
     const rotations = [
         createRotation(UP,UP.scale(2),LEFT),
         createRotation(UP,RIGHT,RIGHT.scale(2)),
@@ -105,24 +98,23 @@ export const createPieceFromType = (type) => {
     const { O , I , Z , S , T , L , J } = Tetrominos;
     switch(type){
         case O:
-            return createSquare(pos)
+            return createO(pos)
         case I:
-            return createHero(pos)
+            return createI(pos)
         case Z:
-            return createMofo(pos)
+            return createZ(pos)
         case S:
-            return createAhole(pos)
+            return createS(pos)
         case T:
-            return createTee(pos)
+            return createT(pos)
         case L:
-            return createSidekick(pos)
+            return createL(pos)
         case J:
-            return createOtherSidekick(pos)
+            return createJ(pos)
     }
 }
 
 export const createRandomPiece = () => {
-    const types = Object.keys(Tetrominos);
-    const typeN = Math.floor(Math.random() * types.length);
-    return createPieceFromType(types[typeN]);
+    const typeN = Math.floor(Math.random() * Types.length);
+    return createPieceFromType(Types[typeN]);
 }
