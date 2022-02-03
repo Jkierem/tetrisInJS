@@ -1,4 +1,4 @@
-import { ImmutableVector, Vector2 as Vector } from './core/structures/Vector';
+import { Vector2 } from './core/structures/Vector';
 import { prop, pipe, isNil } from './core/functions';
 
 export interface Tile {
@@ -11,7 +11,7 @@ export type TileMatrix = TileRow[]
 export interface TileData {
     empty: boolean; 
     color: string; 
-    pos: ImmutableVector<2>; 
+    pos: Vector2; 
 }
 
 const createTile = (empty=true, color=""): Tile => ({ empty , color })
@@ -33,9 +33,9 @@ const getScore = (x: number) => {
 
 export interface Grid {
     data: TileMatrix,
-    collides: (position: ImmutableVector<2>) => boolean
-    occupyCell: (position: ImmutableVector<2>, color: string) => void
-    emptyCell: (position: ImmutableVector<2>) => void
+    collides: (position: Vector2) => boolean
+    occupyCell: (position: Vector2, color: string) => void
+    emptyCell: (position: Vector2) => void
     clean: () => number
     map: (f: (tile: TileData) => void) => void
 }
@@ -77,7 +77,7 @@ export const createGrid = (width: number, height: number): Grid => {
             for( let i = 0 ; i < width ; i++ ){
                 for( let j = 0 ; j < height ; j++ ){
                     f({
-                        pos: Vector(i,j),
+                        pos: Vector2(i,j),
                         ...data[j][i]
                     })
                 }

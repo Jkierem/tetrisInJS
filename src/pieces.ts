@@ -1,4 +1,4 @@
-import { ImmutableVector, Vector2 } from './core/structures/Vector';
+import { Vector2 } from './core/structures/Vector';
 import { Directions, Tetrominos, Colors, Types, TetrominoTypes } from './data'
 
 const {
@@ -7,7 +7,7 @@ const {
     DIAG_UP_LEFT, DIAG_UP_RIGHT
 } = Directions
 
-export type Position = ImmutableVector<2>
+export type Position = Vector2
 
 export type Rotation = (ref: Position) => Position[]
 

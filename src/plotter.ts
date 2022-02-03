@@ -1,5 +1,5 @@
 import type { P5, Tuple4 } from './core/types'
-import { ImmutableVector, Vector2 } from './core/structures/Vector'
+import { Vector2, Vector } from './core/structures/Vector'
 import { Constants, Colors, Tetrominos, HelpText } from "./data";
 import { Core } from './utils';
 
@@ -7,9 +7,9 @@ const mult = (a: number) => (b: number) => a*b
 
 const drawOuterRectangle = (p: P5, constants: typeof Constants) => {
     const { cols , rows , length } = constants;
-    const widthVector = Vector2(length * cols, 0)
-    const heightVector = Vector2(0, length * rows)
-    const topLeft = Vector2(0,0);
+    const widthVector = Vector(length * cols, 0)
+    const heightVector = Vector(0, length * rows)
+    const topLeft = Vector(0,0);
     const topRight = topLeft.add(widthVector);
     const bottomRight = topRight.add(heightVector);
     const bottomLeft = bottomRight.sub(widthVector);
@@ -57,7 +57,7 @@ const drawHorizontalLines = (core: Core, constants: typeof Constants) => {
     })
 }
 
-const drawBlock = (p: P5, pos: ImmutableVector<2>, length: number, color: string) => {
+const drawBlock = (p: P5, pos: Vector2, length: number, color: string) => {
     const { x , y } = pos;
     if( x >= 0 && y >= 0 ){
         p.fill(color)
@@ -164,7 +164,7 @@ export const createPlotter = (core: Core, engine) => {
                         p.translate(0,-10)
                     }
                     pocket.clone()
-                        .teleport(Vector2(0,0))
+                        .teleport(Vector(0,0))
                         .getStandardBlocks()
                         .forEach( pos => {
                             const abs = pos.map(mult(50))

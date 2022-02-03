@@ -2,7 +2,7 @@
 
 Controls:
 - Arrow keys/WASD: move/rotate/soft drop piece
-- SHIFT: pocket piece
+- E: pocket piece
 - SPACE: hard drop
 - P pause
 - R restart

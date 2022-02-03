@@ -1,4 +1,4 @@
-import { Vector2 } from "./core/structures/Vector";
+import { Vector } from "./core/structures/Vector";
 
 export const Colors = {
     yellow: "#ffe74a",
@@ -18,14 +18,14 @@ export const Constants = {
 }
 
 export const Directions = {
-    DOWN: Vector2(0,1),
-    UP: Vector2(0,-1),
-    RIGHT: Vector2(1,0),
-    LEFT: Vector2(-1,0),
-    DIAG_UP_LEFT: Vector2(-1,-1),
-    DIAG_UP_RIGHT: Vector2(1,-1),
-    DIAG_DOWN_LEFT: Vector2(-1,1),
-    DIAG_DOWN_RIGHT: Vector2(1,1),
+    DOWN: Vector(0,1),
+    UP: Vector(0,-1),
+    RIGHT: Vector(1,0),
+    LEFT: Vector(-1,0),
+    DIAG_UP_LEFT: Vector(-1,-1),
+    DIAG_UP_RIGHT: Vector(1,-1),
+    DIAG_DOWN_LEFT: Vector(-1,1),
+    DIAG_DOWN_RIGHT: Vector(1,1),
 }
 
 export type TetrominoTypes = "O" | "I" | "S" | "Z" | "L" | "J" | "T"
