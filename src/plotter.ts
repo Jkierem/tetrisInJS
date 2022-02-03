@@ -1,39 +1,41 @@
-import { Vector } from '@juan-utils/structures'
+import type { P5, Tuple4 } from './core/types'
+import { ImmutableVector, Vector2 } from './core/structures/Vector'
 import { Constants, Colors, Tetrominos, HelpText } from "./data";
+import { Core } from './utils';
 
-const mult = a => b => a*b
+const mult = (a: number) => (b: number) => a*b
 
-const drawOuterRectangle = (p,Constants) => {
-    const { cols , rows , length } = Constants;
-    const widthVector = Vector.of(length*cols,0)
-    const heightVector = Vector.of(0,length*rows)
-    const topLeft = Vector.of(0,0);
+const drawOuterRectangle = (p: P5, constants: typeof Constants) => {
+    const { cols , rows , length } = constants;
+    const widthVector = Vector2(length * cols, 0)
+    const heightVector = Vector2(0, length * rows)
+    const topLeft = Vector2(0,0);
     const topRight = topLeft.add(widthVector);
     const bottomRight = topRight.add(heightVector);
     const bottomLeft = bottomRight.sub(widthVector);
-    const l1 = [ 
-        ...topLeft.toArray(), 
-        ...topRight.toArray() 
+    const l1: Tuple4<number> = [ 
+        ...topLeft.toTuple(), 
+        ...topRight.toTuple() 
     ];
-    const l2 = [ 
-        ...topRight.toArray(),
-        ...bottomRight.toArray()
+    const l2: Tuple4<number> = [ 
+        ...topRight.toTuple(),
+        ...bottomRight.toTuple()
     ]
-    const l3 = [
-        ...bottomRight.toArray(),
-        ...bottomLeft.toArray()
+    const l3: Tuple4<number> = [
+        ...bottomRight.toTuple(),
+        ...bottomLeft.toTuple()
     ]
-    const l4 = [
-        ...bottomLeft.toArray(),
-        ...topLeft.toArray(),
+    const l4: Tuple4<number> = [
+        ...bottomLeft.toTuple(),
+        ...topLeft.toTuple(),
     ]
     p.stroke(Colors.black);
     [ l1, l2, l3, l4 ].forEach( l => p.line(...l) );
 }
 
-const drawVerticalLines = (core,Constants) => {
-    const { length , cols , rows } = Constants
-    core.safe( (p) => {
+const drawVerticalLines = (core: Core, constants: typeof Constants) => {
+    const { length , cols , rows } = constants
+    core.safe((p) => {
         p.stroke(230);
         p.translate(length,0)
         for( let i = 0 ; i < cols-1 ; i++ ){
@@ -43,8 +45,8 @@ const drawVerticalLines = (core,Constants) => {
     })
 }
 
-const drawHorizontalLines = (core,Constants) => {
-    const { length , cols , rows } = Constants
+const drawHorizontalLines = (core: Core, constants: typeof Constants) => {
+    const { length , cols , rows } = constants
     core.safe( (p) => {
         p.stroke(230);
         p.translate(0,length)
@@ -55,7 +57,7 @@ const drawHorizontalLines = (core,Constants) => {
     })
 }
 
-const drawBlock = (p,pos,length,color) => {
+const drawBlock = (p: P5, pos: ImmutableVector<2>, length: number, color: string) => {
     const { x , y } = pos;
     if( x >= 0 && y >= 0 ){
         p.fill(color)
@@ -64,7 +66,7 @@ const drawBlock = (p,pos,length,color) => {
     }
 }
 
-export const createPlotter = (core,engine) => {
+export const createPlotter = (core: Core, engine) => {
     
     const drawGrid = () => {
         core.safe( p => {
@@ -162,7 +164,7 @@ export const createPlotter = (core,engine) => {
                         p.translate(0,-10)
                     }
                     pocket.clone()
-                        .teleport(Vector(0,0))
+                        .teleport(Vector2(0,0))
                         .getStandardBlocks()
                         .forEach( pos => {
                             const abs = pos.map(mult(50))

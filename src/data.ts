@@ -1,4 +1,4 @@
-import { Vector } from "@juan-utils/structures";
+import { Vector2 } from "./core/structures/Vector";
 
 export const Colors = {
     yellow: "#ffe74a",
@@ -18,17 +18,23 @@ export const Constants = {
 }
 
 export const Directions = {
-    DOWN: Vector(0,1),
-    UP: Vector(0,-1),
-    RIGHT: Vector(1,0),
-    LEFT: Vector(-1,0),
-    DIAG_UP_LEFT: Vector(-1,-1),
-    DIAG_UP_RIGHT: Vector(1,-1),
-    DIAG_DOWN_LEFT: Vector(-1,1),
-    DIAG_DOWN_RIGHT: Vector(1,1),
+    DOWN: Vector2(0,1),
+    UP: Vector2(0,-1),
+    RIGHT: Vector2(1,0),
+    LEFT: Vector2(-1,0),
+    DIAG_UP_LEFT: Vector2(-1,-1),
+    DIAG_UP_RIGHT: Vector2(1,-1),
+    DIAG_DOWN_LEFT: Vector2(-1,1),
+    DIAG_DOWN_RIGHT: Vector2(1,1),
 }
 
-export const Tetrominos = {
+export type TetrominoTypes = "O" | "I" | "S" | "Z" | "L" | "J" | "T"
+
+export const Types = ["O", "I", "S", "Z", "L", "J", "T"] as TetrominoTypes[]
+
+export const Tetrominos: {
+    [K in TetrominoTypes]: K
+} = {
     O:"O",
     I:"I",
     S:"S",
@@ -38,19 +44,17 @@ export const Tetrominos = {
     T:"T"
 }
 
-export const Types = Object.keys(Tetrominos)
-
 export const KeyCodes = {
     SPACE: 32,
     LEFT_ARROW: 37,
     UP_ARROW: 38,
     RIGHT_ARROW: 39,
     DOWN_ARROW: 40,
-    SHIFT: 16,
     P: 80,
     R: 82,
     A: 65,
     D: 68,
+    E: 69,
     W: 87,
     S: 83
 }
@@ -61,7 +65,7 @@ export const HelpText = [
     "↑/W      : rotate piece",
     "↓/S      : soft drop",
     "Spacebar : hard drop",
-    "Shift    : pocket piece",
+    "E    : pocket piece",
     "P        : pause game",
     "R        : restart game",
 ]

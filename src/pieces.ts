@@ -1,5 +1,5 @@
-import { Vector } from '@juan-utils/structures';
-import { Directions, Tetrominos, Colors, Types } from './data'
+import { ImmutableVector, Vector2 } from './core/structures/Vector';
+import { Directions, Tetrominos, Colors, Types, TetrominoTypes } from './data'
 
 const {
     UP, DOWN, LEFT, RIGHT, 
@@ -7,7 +7,31 @@ const {
     DIAG_UP_LEFT, DIAG_UP_RIGHT
 } = Directions
 
-const createPiece = (type,position,rotations,color,currentRot=0) => {
+export type Position = ImmutableVector<2>
+
+export type Rotation = (ref: Position) => Position[]
+
+export interface Piece {
+    type: TetrominoTypes,
+    color: string,
+    rotations: Rotation[],
+    readonly pos: Position,
+    rotate: () => Piece,
+    move: (dir: Position) => Piece,
+    getBlocks: () => Position[],
+    getStandardBlocks: () => Position[],
+    getPosition: () => number[],
+    clone: () => Piece,
+    teleport: (next: Position) => Piece
+}
+
+const createPiece = (
+    type: TetrominoTypes, 
+    position: Position,
+    rotations: Rotation[],
+    color: string,
+    currentRot: number = 0
+): Piece => {
     let rot = currentRot;
     let pos = position;
     return {
@@ -25,21 +49,21 @@ const createPiece = (type,position,rotations,color,currentRot=0) => {
     }
 }
 
-const createRotation = (...dirs) => {
-    return (pos) => [
+const createRotation = (...dirs: Position[]): Rotation => {
+    return (pos: Position) => [
         pos,
         ...dirs.map(dir => pos.add(dir) )
     ]
 }
 
-const createO = (pos) => {
+const createO = (pos: Position) => {
     const rotations = [
         createRotation(RIGHT,DOWN,DIAG_DOWN_RIGHT)
     ]
     return createPiece("O",pos,rotations,Colors.yellow);
 }
 
-const createI = (pos) => {
+const createI = (pos: Position) => {
     const rotations = [
         createRotation(UP,DOWN,DOWN.scale(2)),
         createRotation(LEFT,RIGHT,RIGHT.scale(2))
@@ -47,7 +71,7 @@ const createI = (pos) => {
     return createPiece("I",pos,rotations,Colors.blue);
 } 
 
-const createS = (pos) => {
+const createS = (pos: Position) => {
     const rotations = [
         createRotation(UP,LEFT,DIAG_UP_RIGHT),
         createRotation(UP,DIAG_UP_LEFT,DIAG_UP_LEFT.add(UP))
@@ -55,7 +79,7 @@ const createS = (pos) => {
     return createPiece("S",pos,rotations,Colors.red);
 }
 
-const createZ = (pos) => {
+const createZ = (pos: Position) => {
     const rotations = [
         createRotation(UP,RIGHT,DIAG_UP_LEFT),
         createRotation(UP,DIAG_UP_RIGHT,DIAG_UP_RIGHT.add(UP))
@@ -63,7 +87,7 @@ const createZ = (pos) => {
     return createPiece("Z",pos,rotations,Colors.green);
 }
 
-const createT = (pos) => {
+const createT = (pos: Position) => {
     const rotations = [
         createRotation(UP,LEFT,RIGHT),
         createRotation(UP,DOWN,RIGHT),
@@ -73,7 +97,7 @@ const createT = (pos) => {
     return createPiece("T",pos,rotations,Colors.purple);
 }
 
-const createL = (pos) => {
+const createL = (pos: Position) => {
     const rotations = [
         createRotation(UP,UP.scale(2),RIGHT),
         createRotation(DOWN,RIGHT,RIGHT.scale(2)),
@@ -83,7 +107,7 @@ const createL = (pos) => {
     return createPiece("L",pos,rotations,Colors.orange);
 } 
 
-const createJ = (pos) => {
+const createJ = (pos: Position) => {
     const rotations = [
         createRotation(UP,UP.scale(2),LEFT),
         createRotation(UP,RIGHT,RIGHT.scale(2)),
@@ -93,8 +117,8 @@ const createJ = (pos) => {
     return createPiece("J",pos,rotations,Colors.pink);
 }
 
-export const createPieceFromType = (type) => {
-    const pos = Vector(5,-3);
+export const createPieceFromType = (type: TetrominoTypes) => {
+    const pos = Vector2(5,-3);
     const { O , I , Z , S , T , L , J } = Tetrominos;
     switch(type){
         case O:

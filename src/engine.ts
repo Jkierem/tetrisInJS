@@ -1,18 +1,23 @@
-import { justOf } from '@juan-utils/functions';
-import { createGrid } from './grid';
+import { justOf } from './core/functions';
+import { createGrid, Grid } from './grid';
 import { createGrabBag } from './grabbag'
-import { createPieceFromType } from './pieces';
-import { Directions, Constants, Types } from './data'
+import { createPieceFromType, Piece } from './pieces';
+import { Directions, Constants, Types, TetrominoTypes } from './data'
 import { threshold, lessThan, between, moreOrEqualTo } from './threshold';
 
 const { DOWN , RIGHT , LEFT } = Directions
 
 const bagConfig = {
-    options: Types,
+    options: Types as TetrominoTypes[],
     quantity: 2
 };
 
-const level = (level,framerate) => ({ level, framerate })
+type LevelInfo = {
+    level: number | "MAX",
+    framerate: number
+}
+
+const level = (level: number | "MAX", framerate: number): LevelInfo => ({ level, framerate })
 
 const levelSelector = threshold([
     [ lessThan(1000) , justOf(level(1,60)) ],
@@ -23,17 +28,44 @@ const levelSelector = threshold([
     [ moreOrEqualTo(16000) , justOf(level("MAX",2)) ],
 ])
 
-export const createEngine = () => {
+export interface EngineState {
+    grid: Grid,
+    piece: Piece,
+    pocket: Piece | null,
+    score: number,
+    lost: boolean,
+    level: LevelInfo['level'],
+    running: boolean,
+    queue: Piece[]
+}
+
+export interface Engine {
+    tick: () => void
+    drop: () => void
+    togglePause: () => void
+    pause: () => void
+    pocket: () => void
+    moveLeft: () => void
+    moveRight: () => void
+    softdrop: () => void
+    rotate: () => void
+    isValidPosition: (p: Piece) => boolean
+    get: () => EngineState
+    getFrameCount: () => number
+    restart: () => void
+}
+
+export const createEngine = (): Engine => {
     const { rows , cols } = Constants
-    let bag = createGrabBag(bagConfig)
+    let bag = createGrabBag<TetrominoTypes>(bagConfig)
     let queue = bag.get(5).map(createPieceFromType);
     let grid = createGrid(cols,rows);
-    let piece = createPieceFromType(bag.get());
+    let piece = createPieceFromType(bag.getOnce());
     let pocket = null;
     let score = 0;
     let lost = false;
     let running = true;
-    let level = 1;
+    let level: LevelInfo['level'] = 1;
     
     const isInside = ({ x , y }) => {
         return x >= 0 && y >= -4 && x < cols && y < rows
@@ -56,7 +88,7 @@ export const createEngine = () => {
                         })
                         score += grid.clean();
                         piece = queue.shift();
-                        queue.push(createPieceFromType(bag.get()));
+                        queue.push(createPieceFromType(bag.getOnce()));
                     }
                 }else{
                     piece.move(DOWN)
@@ -85,7 +117,7 @@ export const createEngine = () => {
                     })
                     score += grid.clean();
                     piece = queue.shift();
-                    queue.push(createPieceFromType(bag.get()));
+                    queue.push(createPieceFromType(bag.getOnce()));
                 }
             }
         },
@@ -105,7 +137,7 @@ export const createEngine = () => {
             } else {
                 pocket = piece.clone();
                 piece = queue.shift().clone().teleport(piece.pos)
-                queue.push(createPieceFromType(bag.get()));
+                queue.push(createPieceFromType(bag.getOnce()));
             }
         },
         moveLeft(){ 
@@ -159,7 +191,7 @@ export const createEngine = () => {
             bag = createGrabBag(bagConfig)
             queue = bag.get(5).map(createPieceFromType);
             grid = createGrid(cols,rows);
-            piece = createPieceFromType(bag.get());
+            piece = createPieceFromType(bag.getOnce());
             pocket = null;
             score = 0;
             lost = false;

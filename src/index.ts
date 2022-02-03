@@ -6,7 +6,7 @@ import { KeyCodes } from './data';
 
 window.addEventListener('keydown', e => e.preventDefault())
 
-let main = (p) => {
+let main = (p: p5) => {
     const core = createCore(p);
     const engine = createEngine();
     const plotter = createPlotter(core,engine);
@@ -52,7 +52,7 @@ let main = (p) => {
                 engine.softdrop()
                 break;
             //TODO: Replace shift due to minor bug where shift gets blocked
-            case KeyCodes.SHIFT:
+            case KeyCodes.E:
                 if(!lost && running)
                 engine.pocket();
                 break;
